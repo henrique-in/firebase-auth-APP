@@ -6,14 +6,22 @@ import {
   Text,
   View,
   TextInput,
-  Button,
+  TouchableOpacity
 } from 'react-native';
 
-import {RectButton} from 'react-native-gesture-handler';
+import {Button} from 'react-native-elements';
+import AsyncStorage from '@react-native-community/async-storage';
+import {YellowBox} from 'react-native';
+import firebase from '../firebase/firebaseConnection';
 
-import firebase from './src/firebase/firebaseConnection';
+YellowBox.ignoreWarnings(['Warning: Async Storage has been extracted from react-native core']);
 
 export default class App extends Component {
+
+  static navigationOptions = {
+    title: "Home",
+    headerShown: false
+  }
   constructor(props) {
     super(props);
     this.state = {
@@ -52,7 +60,7 @@ export default class App extends Component {
     return (
       <View style={styles.container}>
         <View style={{alignItems: "center", margin: 50}}>
-        <Image source={require('./src/img/logo.png')}/>
+        <Image source={require('../img/logo.png')}/>
         </View>
         <TextInput
           style={styles.input}
@@ -67,18 +75,53 @@ export default class App extends Component {
           style={styles.input}
           placeholder="Senha"
           underlineColorAndroid="transparent"
+          secureTextEntry= {true}
           onChangeText={(senha) => {
             this.setState({senha});
           }}
         />
 
-        <RectButton> OI </RectButton>
-        <View style={{margin:10}}>
-        <Button  color={'#483D8B'} title="Entrar" onPress={this.logar} />
+        
+        <View style={styles.ViewButton}>
+        <Button
+          onPress={this.logar}
+          title="Entrar"
+          titleStyle={{
+            fontSize: 20
+          }}
+          buttonStyle={{
+            backgroundColor: '#483D8b',
+            width: 250,
+            borderRadius:50,
+            margin:10
+          }}
+        />
+
+        <Button
+          type="outline"
+          title="Cadastre-se"
+          titleStyle={{
+            fontSize: 20,
+            color:'#836FFF'
+          }}
+          buttonStyle={{
+            width: 200,
+            height: 40,
+            borderRadius:50,
+            margin: 5,
+          
+            borderColor: '#836FFF'
+          }}
+        />
+         
+
         </View>
-        <View style={{margin:20}}>
+
+        
+        
+        {/* <View style={{margin:20}}>
         <Button color={'#B22222'}title="Logout" onPress={this.sair} />
-        </View>
+        </View> */}
       </View>
     );
   }
@@ -96,8 +139,29 @@ const styles = StyleSheet.create({
     backgroundColor: '#ccc',
     fontSize: 22,
     padding: 5,
-    margin: 5,
+    margin: 7,
+    borderRadius: 50,
+    textAlign:'center',
+    color:'purple'
 
   },
+  ViewButton:{
+    marginTop: 20,
+    justifyContent:'center',
+    alignItems: 'center'
+  },
+  texto:{
+    textAlign: 'center',
+    color:'#FFF',
+    fontWeight: 'bold',
+    fontSize:20
+   
+  },
+  textoCadastro:{
+    textAlign: 'center',
+    color:'#A020F0',
+    fontSize:17
+   
+  }
   
 });
