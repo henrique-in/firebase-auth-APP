@@ -13,7 +13,7 @@ import {Button} from 'react-native-elements';
 import AsyncStorage from '@react-native-community/async-storage';
 import {YellowBox} from 'react-native';
 import firebase from '../firebase/firebaseConnection';
-
+import {NavigationActions, StackActions} from 'react-navigation';
 YellowBox.ignoreWarnings(['Warning: Async Storage has been extracted from react-native core']);
 
 export default class App extends Component {
@@ -34,7 +34,13 @@ export default class App extends Component {
 
     firebase.auth().onAuthStateChanged((user) => {
       if (user) {
-        alert('Usuario Logado com sucesso!');
+        alert('Bem-vindo!');
+        this.props.navigation.dispatch(StackActions.reset({
+          index: 0,
+          actions:[
+            NavigationActions.navigate({routeName:'Home'})
+          ]
+        }))
       }
     });
   }
@@ -119,9 +125,9 @@ export default class App extends Component {
 
         
         
-        {/* <View style={{margin:20}}>
+        <View style={{margin:20}}>
         <Button color={'#B22222'}title="Logout" onPress={this.sair} />
-        </View> */}
+        </View>
       </View>
     );
   }

@@ -9,6 +9,11 @@ import {
 
 
 export default class App extends Component {
+
+  static navigationOption={
+    title: 'Home'
+  }
+
   constructor(props) {
     super(props);
     this.state = {
@@ -30,7 +35,9 @@ const styles = StyleSheet.create({
   container: {
     flex: 1,
     padding: 20,
-    backgroundColor:'#fff'
+    backgroundColor:'#fff',
+    justifyContent:'center',
+    alignItems:'center'
   },
   
 });
