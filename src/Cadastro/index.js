@@ -9,17 +9,14 @@ import {
 } from 'react-native';
 
 import {Button} from 'react-native-elements';
-import AsyncStorage from '@react-native-community/async-storage';
-import {YellowBox} from 'react-native';
 import firebase from '../firebase/firebaseConnection';
 import {NavigationActions, StackActions} from 'react-navigation';
-YellowBox.ignoreWarnings(['Warning: Async Storage has been extracted from react-native core']);
+
 
 export default class App extends Component {
 
   static navigationOptions = {
-    title: "Home",
-    headerShown: false
+    title: "Cadastro",
   }
   constructor(props) {
     super(props);
@@ -28,45 +25,32 @@ export default class App extends Component {
       senha: '',
     };
 
-    this.logar = this.logar.bind(this);
     this.cadastrar = this.cadastrar.bind(this);
 
-    firebase.auth().onAuthStateChanged((user) => {
-      if (user) {
-        alert('Bem-vindo!');
-        this.props.navigation.dispatch(StackActions.reset({
-          index: 0,
-          actions:[
-            NavigationActions.navigate({routeName:'Home'})
-          ]
-        }))
+  }
+  cadastrar(){
+    firebase.auth().createUserWithEmailAndPassword(this.state.email , this.state.senha)
+    .catch((error)=>{
+      if(error.code == 'auth/weak-password'){
+        alert('Sua senha deve conter no minimo 6 Caracteres.')
       }
-    });
+      if(error.code=='auth/invalid-email'){
+        alert('Email Invalido.');
+      }
+     }
+    
+    )
+
+    alert('Conta criada com sucesso!');
+    this.props.navigation.navigate('Login')
+    //  this.props.navigation.dispatch(StackActions.reset({
+    //    index: 0,
+    //    actions:[
+    //      NavigationActions.navigate({routeName:'Login'})
+    //    ]
+    //  }))
+
   }
-
-  cadastrar() {
-    this.props.navigation.navigate('Cadastro')
-    // this.props.navigation.dispatch(StackActions.reset({
-    //   actions:[
-    //     NavigationActions.navigate({routeName:'Cadastro'})
-    //   ]
-    // }))
-  }
-
-  logar() {
-    firebase
-      .auth()
-      .signInWithEmailAndPassword(this.state.email, this.state.senha)
-      .catch((error) => {
-        if (error.code == 'auth/wrong-password') {
-          alert('Senha incorreta');
-        } else {
-          alert('Ops, tente novamente mais tarde!');
-        }
-      });
-  }
-
-
 
   render() {
     return (
@@ -96,8 +80,8 @@ export default class App extends Component {
         
         <View style={styles.ViewButton}>
         <Button
-          onPress={this.logar}
-          title="Entrar"
+          onPress={this.cadastrar}
+          title="Confirmar"
           titleStyle={{
             fontSize: 20
           }}
@@ -108,26 +92,6 @@ export default class App extends Component {
             margin:10
           }}
         />
-
-        <Button
-          type="outline"
-          title="Cadastre-se"
-          onPress={this.cadastrar}
-          titleStyle={{
-            fontSize: 20,
-            color:'#836FFF'
-          }}
-          buttonStyle={{
-            width: 200,
-            height: 40,
-            borderRadius:50,
-            margin: 5,
-          
-            borderColor: '#836FFF'
-          }}
-        />
-         
-
         </View>
 
         
@@ -142,7 +106,9 @@ const styles = StyleSheet.create({
   container: {
     flex: 1,
     padding: 20,
-    backgroundColor:'#fff'
+    backgroundColor:'#fff',
+    justifyContent:'center',
+    alignItems:'center'
   },
   input: {
     width: 350,
